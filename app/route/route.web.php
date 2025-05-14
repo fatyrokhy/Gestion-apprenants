@@ -3,12 +3,16 @@ session_start();
 require_once(PATH ."/app/services/session.service.php");
 require_once(PATH ."/app/model/model.php");
 require_once(PATH ."/app/controller/controller.php");
-define('PAGE','http://faty.niass.ecole221.sn:8005/?');
+define('PAGE','http://faty.niass.ecole221.sn:8005/');
+$myC = $_REQUEST["controller"] ?? "";
+
+NotReturnConnexion($myC ,'dashboard');
+
 
 function run()  {
     $mesControllers=[
         "security" =>PATH ."/app/controller/log.controller.php",
-        "promo" =>PATH ."/app/controller/promotion.controller.php",
+        "promo" =>PATH ."/app/controller/dashboard.controller.php",
     ];
     
     $controller=$_REQUEST["controller"]??"security";
@@ -21,5 +25,4 @@ function run()  {
         } else {
             echo "Ce controller ".  $controller .  " n'existe pas";
         }
-       
     }

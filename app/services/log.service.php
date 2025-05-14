@@ -9,7 +9,7 @@ function login($seConnecter)
             $utilisateur = $seConnecter($_POST["email"], $_POST["pass"]);
             if ($utilisateur) {
                 switch ($utilisateur['role']) {
-                    case 'etudiant':
+                    case 'ADMIN':
                         $_SESSION['user'] = $utilisateur;
                         // $user=getUser();
                             redirection('promo','listePromo');

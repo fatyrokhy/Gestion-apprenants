@@ -1,7 +1,7 @@
 <?php
 function connexion() {
 try {
-     $pdo = new PDO("'pgsql':host=localhost;dbname=ges_apprenant", "root", "");
+     $pdo = new PDO("pgsql:host=localhost;dbname=ges_apprenant", "postgres", "tresor112");
        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); 
        return $pdo;
     } catch (PDOException $e) {
@@ -44,3 +44,18 @@ function getId($sql, $params = []) {
     $row = $stmt->fetch(); 
     return $row ? $row['id'] : null;
 }
+//pour compter la totalite dans une table
+$compter=function ($table): int {
+    $pdo=connexion();
+    $sql = "SELECT COUNT(*) FROM $table";
+    $stmt = $pdo->query($sql);
+    return (int) $stmt->fetchColumn();
+};
+//pour compter la totalite dans une table
+$compterElementSpecifique=function ($table,$statut,$stat): int {
+    $pdo=connexion();
+    $sql = "SELECT COUNT(*) FROM $table WHERE $statut = :valeur";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['valeur' => $stat]);
+    return (int) $stmt->fetchColumn();
+};

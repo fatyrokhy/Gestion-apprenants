@@ -8,7 +8,7 @@ function renderView(string $dossier,string $view,array $datas=[],string $layout=
 }
 
 function redirection(string $controller, string $page){
-    header("Location:".PAGE."?controller=$controller&page=$page");
+    header("Location:".PAGE."controller=$controller&page=$page");
     exit();
 }
 
@@ -29,4 +29,12 @@ function isEmpty($name, &$errors, $isCheckbox = false) {
             $errors[$name] = ucfirst($name) . " obligatoire*";
         }
     }
+}
+
+//Ne pas retourner a la page de connexion apres connexion
+function NotReturnConnexion($controller,$page){
+    if (isset($_SESSION["user"]) &&( $controller== "security" || $controller== "" )){
+        redirection("promo", $page);
+     exit();
+    } 
 }

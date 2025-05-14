@@ -4,15 +4,14 @@ if (isset($_REQUEST["page"])) {
     $page = $_REQUEST["page"];
     // NotReturn();
     switch ($page) {
-        case 'connexion':
-            listePromo();
+        case 'dashboard':
+            listePromo($compter,$compterElementSpecifique) ;
             break;
-        
         default:
         break;
     }
 } else {
-    listePromo();
+    listePromo($compter,$compterElementSpecifique);
 }
 
     
