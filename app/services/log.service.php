@@ -12,7 +12,7 @@ function login($seConnecter)
                     case 'ADMIN':
                         $_SESSION['user'] = $utilisateur;
                         // $user=getUser();
-                            redirection('promo','listePromo');
+                            redirection('promo','dashboard');
                         break;
                     case 'responsable':
                         $_SESSION['user'] = $utilisateur;

@@ -29,7 +29,7 @@
                 <ul class="space-y-4 mb-12">
                     <li>
                         <a href="<?= PAGE ?>controller=promo&page=dashboard" class="sidebar-link flex items-center space-x-2 
-                 <?= ($_GET['page'] == 'dashboardRp') ? 'bg-gray-200 bg-opacity-25 p-2  hover:text-white rounded-lg' : '' ?>" data-page="dashboard">
+                 <?= ($_GET['page'] == 'dashboard') ? 'bg-gray-200 bg-opacity-25 p-2  hover:text-white rounded-lg' : '' ?>" data-page="dashboard">
                             <i class="ri-dashboard-line text-xl"></i>
                             <span>Dashboard</span>
                         </a>
@@ -124,9 +124,9 @@
             </button>
         </div>
         <!-- contenu -->
-        <div class="flex-1 ml-52 min-h-screen w-full  space-y-4">
+        <div class="flex-1 ml-52 min-h-screen w-full  space-y-4 p-2">
             <!-- Topbar -->
-            <header id="topbar" class="bg-white shadow p-4 flex justify-between items-center rounded-bl-2xl">
+            <header id="topbar" class="bg-white shadow p-4 flex justify-between items-center rounded-xl">
                 <h1 class="text-xl font-semibold">Bienvenue <span>👋 </span></h1>
                 <div class="flex items-center space-x-4">
                     <div class="flex items-center space-x-2">

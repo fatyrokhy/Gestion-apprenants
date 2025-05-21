@@ -9,10 +9,6 @@ if (isset($_REQUEST["page"])) {
             // global $vue;
             $listePromo();
             break;
-        case 'formPromo':
-            // global $vue;
-            $formPromo();
-            break;
         default:
             break;
     }

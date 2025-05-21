@@ -14,14 +14,14 @@ function executInsert($sql, $params) {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     return $pdo->lastInsertId();
-}
+};
 
 function executUpdate($sql, $params = []) {
     $pdo =connexion();
     $stmt= $pdo->prepare($sql);
     $stmt->execute($params);
      return $stmt;
-}
+};
 
 function executSelect($sql, $params = []) {
     $pdo =connexion();
@@ -29,6 +29,19 @@ function executSelect($sql, $params = []) {
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+// temporaire
+// function executSelect($sql, $params = []) {
+//     $pdo = connexion();
+//     echo "<!-- Requête SQL : $sql -->"; // Debug visible en HTML
+//     $stmt = $pdo->prepare($sql);
+//     $stmt->execute($params);
+//     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+//     if (empty($results)) {
+//         echo "<!-- Aucun résultat pour la requête -->";
+//     }
+//     return $results;
+// }
 function executeSelect($sql, $params = []) {
     $pdo =connexion();
     $stmt = $pdo->prepare($sql);
@@ -46,16 +59,24 @@ function getId($sql, $params = []) {
 }
 //pour compter la totalite dans une table
 $compter=function ($table): int {
-    $pdo=connexion();
-    $sql = "SELECT COUNT(*) FROM $table";
-    $stmt = $pdo->query($sql);
-    return (int) $stmt->fetchColumn();
+    $sql = "SELECT COUNT(*) as count FROM $table";
+    $result = executSelect($sql);
+    return $result[0]['count'] ?? 0;
 };
 //pour compter la totalite dans une table
-$compterElementSpecifique=function ($table,$statut,$stat): int {
-    $pdo=connexion();
-    $sql = "SELECT COUNT(*) FROM $table WHERE $statut = :valeur";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['valeur' => $stat]);
-    return (int) $stmt->fetchColumn();
+$compterElementSpecifique=function ($table,$colonne,$value): int {
+    $sql = "SELECT COUNT(*) as count FROM $table WHERE $colonne = :valeur";
+    $param=['valeur' => $value];
+    $result = executSelect($sql,$param);
+    return $result[0]['count'] ?? 0;
 };
+
+
+//POUR Selectionner tableau
+function select($elements) {
+    $pdo=connexion();
+    $select =$pdo->prepare("SELECT *  FROM $elements");
+    $select->execute(); 
+    $result = $select->fetchAll(PDO::FETCH_ASSOC); 
+    return $result;
+}

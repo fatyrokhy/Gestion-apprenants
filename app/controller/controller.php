@@ -38,3 +38,10 @@ function NotReturnConnexion($controller,$page){
      exit();
     } 
 }
+//var_dump
+function dd($die)  {
+    echo "<pre>";
+     var_dump($die);
+     die();
+    echo"</pre>";
+ }

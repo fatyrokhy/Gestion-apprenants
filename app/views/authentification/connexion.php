@@ -17,9 +17,8 @@
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
     <div class="h-screen w-screen">
         <img src="../assets/images/conexion1.png" alt="" class="absolute inset-0 object-cover w-full h-full  z-0" srcset="">
-        <div class=" p-8 rounded-lg shadow-md w-full max-w-sm absolute z-5 h-[60vh] top-30 mx-auto left-[76vh] bg-[#DF8C07]"></div>
-        <div class=" p-8 rounded-lg shadow-md w-full max-w-sm absolute z-5 h-[60vh] top-28 left-[77vh]  bg-[#D70C0C]"></div>
-         <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-sm  z-10 relative mx-auto mt-28   ">
+         <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-sm  z-10 relative mx-auto mt-28 
+         border-4 border-t-[#D70C0C] border-r-[#D70C0C] border-l-[#DF8C07] border-b-[#DF8C07]" >
         <h1 class="text-xl font-semibold  text-gray-800 mb-2">Bienvenue à l'école 221</h1>
         <h2 class="text-2xl font-bold  text-gray-700 mb-6">Se Connecter</h2>
 
