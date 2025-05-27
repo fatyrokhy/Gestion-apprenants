@@ -19,7 +19,7 @@
     </style>
 </head>
 
-<body class="bg-gray-100 text-gray-700 font-serif  overflow-x-hidden">
+<body class="bg-gray-100 text-gray-800 font-serif  overflow-x-hidden">
     <div class="flex min-h-screen items-start">
         <!-- Sidebar -->
         <div id="sidebar"
@@ -35,10 +35,10 @@
                         </a>
                     </li>
                     <li>
-                        <a href="<?= PAGE ?>controller=rpController&page=classe" class="sidebar-link flex items-center space-x-2 
-                <?= ($_GET['page'] == 'classe') ? 'bg-white bg-opacity-25 p-2  hover:text-white rounded-lg' : '' ?>" data-page="classe">
+                        <a href="<?= PAGE ?>controller=ref&page=ref" class="sidebar-link flex items-center space-x-2 
+                <?= ($_GET['page'] == 'ref') ? 'bg-white bg-opacity-25 p-2  hover:text-white rounded-lg' : '' ?>" data-page="classe">
                             <i class="ri-building-2-line text-xl"></i>
-                            <span>Classes</span>
+                            <span>Référentiel</span>
                         </a>
                     </li>
                     <li>
@@ -126,7 +126,7 @@
         <!-- contenu -->
         <div class="flex-1 ml-52 min-h-screen w-full  space-y-4 p-2">
             <!-- Topbar -->
-            <header id="topbar" class="bg-white shadow p-4 flex justify-between items-center rounded-xl">
+            <header id="topbar" class="bg-white shadow p-4 flex justify-between items-center rounded-md">
                 <h1 class="text-xl font-semibold">Bienvenue <span>👋 </span></h1>
                 <div class="flex items-center space-x-4">
                     <div class="flex items-center space-x-2">
@@ -148,7 +148,7 @@
                     </div>
                 </div>
             </header>
-            <div class="bg-white bg-opacity-50 rounded-lg p-4 space-y-4 ml-2 shadow p-8 gap-4">
+            <div class="bg-white bg-opacity-50 rounded-lg p-8 space-y-6 shadow  ">
                 <?= $contenu ?>
             </div>
         </div>

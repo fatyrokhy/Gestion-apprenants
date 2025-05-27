@@ -44,11 +44,12 @@
     <div class="w-[70%]">
       <label class="input input-neutral  border border-gray-600 w-full ">
         <i class="ri-search-line text-gray-400"></i>
-        <input type="search" required placeholder="Search" name="search"  />
+        <input type="search" required placeholder="Search" name="search"
+        value="<?= isset($_GET['search']) ? ($_GET['search']) : '' ?>"
+         onchange="document.getElementById('filterForm').submit()"  />
       </label>
     </div>
     <select name="statut" class="select join-item border border-gray-600 w-[10%]" onchange="document.getElementById('filterForm').submit()">
-      <option disabled selected>Filter</option>
       <option value="Tous" <?= (isset($_GET['statut']) && $_GET['statut'] =="Tous") ? 'selected' : '' ?>>Tous</option>
       <option value="Actif" <?= (isset($_GET['statut']) && $_GET['statut'] =="Actif") ? 'selected' : '' ?>>Actif</option>
       <option value="Inactif" <?= (isset($_GET['statut']) && $_GET['statut'] =="Inactif") ? 'selected' : '' ?>>Inactif</option>
@@ -71,29 +72,38 @@
 <?php if ($liste != null): ?>
   <!-- EN cardes -->
   <?php if ($vue == 'grille'): ?>
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid grid-cols-3 gap-4">
       <?php foreach ($liste as $value): ?>
-        <div class="card  bg-base-100 shadow-sm p-2 space-y-1">
-
-              <div class="w-28 bg-white rounded-lg shadow flex justify-center gap-3  py-1 place-self-end">
+        <?php
+      $binaryImage = $image($value['id']);
+      $imgSrc='https://img.freepik.com/photos-gratuite/afro-americain-travaille-ordinateur-pour-ecrire-du-code-programmation_482257-116258.jpg?uid=R136284794&ga=GA1.1.1296348742.1720653911&semt=ais_hybrid&w=740';
+      if ($binaryImage) {
+          $base64Image = base64_encode($binaryImage);
+          $imgSrc = 'data:image/png;base64,' . $base64Image;
+      } 
+    ?>
+        <div class="card  bg-base-100 shadow-sm px-6 space-y-1 p-2">
+              <div class=" bg-gray-100 text-sm  rounded-xl shadow flex justify-center gap-2  p-1 place-self-end">
                   <p class="<?=($value['statut']=='Actif')?'text-green-600':'text-red-400'?>">
                    <?= $value['statut']?></p>
+                   <a href="<?= PAGE ?>controller=promo&page=dashboard&id=<?= $value['id'] ?>">
                 <button class="rounded-lg px-1 <?=($value['statut']=='Inactif')?'bg-green-300 text-green-600 ':'bg-red-300 text-red-400 '?>">
                   <i class="ri-shut-down-line"></i></button>
+                  </a>
             </div>
           <div class="">
-          <div class="flex gap-5">
-              <img class="rounded-full h-12 w-12"
-              src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-              alt="Movie" />
-              <div>
-            <h2 class="card-title text-sm font-semibold"></span><?= $value['nom'] ?></h2>
+          <div class="flex gap-5 py-4">
+          
+<img class="rounded-full h-12 w-12" src="<?= htmlspecialchars($imgSrc) ?>" alt="Image" />
+            <div  class=" text-center">
+            <h2 class="card-title text-lg font-semibold"></span><?= $value['nom'] ?></h2>
             <p class="text-sm"><span><?= $value['date_debut'] ?> - <?= $value['date_fin'] ?></span></p>
-              </div>
+            </div>
           </div>
-            <p>Debut:<span><?= $value['nom'] ?></span></p>
+            <p class="bg-slate-50 rounded-lg w-full text-center text-xs p-2 "><span><?= $value['nom'] ?></span>
+              Appreants</p>
             <div class="card-actions justify-end">
-              <a href="" class=" text-red-600">voir détails</a>
+              <a href="" class=" text-red-600 m-2">voir détails</a>
             </div>
           </div>
         </div>
@@ -151,7 +161,7 @@
     <p class="py-4">Remplacer les informations ci-dessous pour créer une nouvelle promotion </p>
     <div class="modal-action">
       <!-- <form method="dialog"> -->
-    <form method="POST" action="">
+    <form method="POST" action=""  enctype="multipart/form-data">
         <input type="hidden" name="controller" value="promo">
         <input type="hidden" name="page" value="dashboard">
         <input type="hidden" name="id" value="<?= $_GET['edit'] ?? '' ?>">
@@ -187,7 +197,7 @@
                 <span class="label-text text-sm font-medium text-gray-700">Photo de la promotion</span>
             </label>
             <div class="w-40 h-32 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"> Ajuster ou glisser
-            <input type="file" name="nbre_heure" value="<?= $cours['nbre_heure'] ?? '' ?>" placeholder="" class="
+            <input type="file" name="image" accept="image/*" value="<?= $cours['nbre_heure'] ?? '' ?>" placeholder="" class="
                    opacity-0  w-full h-32 cursor-pointer  focus:outline-none focus:ring-2 focus:ring-pink-500 ">
               </div>
             <p class="text-red-500"><?= $errors["nbre_heure"] ?? '' ?></p>

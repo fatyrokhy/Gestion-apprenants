@@ -5,41 +5,81 @@ $sql="SELECT p.*,string_agg(r.libelle, ', ') AS libelle FROM promotion p
 JOIN referentiel_promotion rp ON rp.id_promotion=p.id
 JOIN referentiel r ON r.id=rp.id_referentiel
 GROUP BY p.id
-ORDER BY (p.statut = 'actif') DESC
-";
-return executSelect($sql,[]);
+ORDER BY (p.statut = 'actif') DESC";
+return executeSelectAll($sql,[]);
 };
 
-global $findPromoByStatut;
-$findPromoByStatut = function ($statut) {
-    $sql = "SELECT p.*, string_agg(r.libelle, ', ') AS libelle 
+global $searchPromo;
+$searchPromo = function ($nom, $statut = 'Tous') {
+    $nom = "%$nom%";
+    $sql = "SELECT 
+                p.id, 
+                p.nom, 
+                p.date_debut, 
+                p.date_fin, 
+                p.statut, 
+                p.image, 
+                string_agg(r.libelle, ', ') AS libelle
             FROM promotion p
             JOIN referentiel_promotion rp ON rp.id_promotion = p.id
-            JOIN referentiel r ON r.id = rp.id_referentiel ";
+            JOIN referentiel r ON r.id = rp.id_referentiel 
+            WHERE (p.nom LIKE :nom OR r.libelle LIKE :nom)";
+    
+    $param = [':nom' => $nom];
 
-    $param = [];
-
+    // Ajoute le filtre sur le statut si précisé
     if ($statut !== 'Tous') {
-        $sql .= "WHERE p.statut = :statut ";
+        $sql .= " AND p.statut = :statut";
         $param[':statut'] = $statut;
     }
 
-    $sql .= "GROUP BY p.id
-             ORDER BY (p.statut = 'Actif') DESC";
+    $sql .= " GROUP BY p.id, p.nom, p.date_debut, p.date_fin, p.statut, p.image
+              ORDER BY (p.statut = 'Actif') DESC";
 
-    return executSelect($sql, $param);
+    return executeSelectAll($sql, $param);
 };
+
+
+global $getImagePromoById;
+$getImagePromoById = function ($id)
+{
+    try {
+        $pdo = connexion(); // ta fonction de connexion existante
+        $sql = "SELECT image FROM promotion WHERE id = :id";
+        $param = [];
+        $param[':id'] = $id;
+        $row = executeSelect($sql, $param);
+
+
+        if ($row && !empty($row['image'])) {
+            $stream = $row['image'];
+
+            // Si c'est un stream, on lit son contenu
+            if (is_resource($stream)) {
+                return stream_get_contents($stream);
+            }
+
+            return $stream; // si ce n'est pas un stream
+        }
+
+        return null; // Aucun résultat ou image vide
+    } catch (PDOException $e) {
+        return null;
+    }
+};
+
 global $ajoutPromo;
 //ajouter dans professeur
-$ajoutPromo=function ($nom,$date_debut,$date_fin)  {
-    $stmt = "INSERT INTO promotion(nom, date_debut, date_fin,statut)
-    VALUES (:nom,:date_debut,:date_fin,:statut)";
+$ajoutPromo=function ($nom,$date_debut,$date_fin,$image)  {
+    $stmt = "INSERT INTO promotion(nom, date_debut, date_fin,statut,image)
+    VALUES (:nom,:date_debut,:date_fin,:statut,:image)";
 
     $param=[
         ':nom'=> $nom,
         ':date_debut'=> $date_debut,
         ':date_fin'=> $date_fin,
-        ':statut'=> 'Actif'
+        ':statut'=> 'Inactif',
+        ':image'=>$image
     ];
     return executInsert($stmt,$param);
 };
@@ -121,6 +161,29 @@ function misAJourProfClasses($prof_id, $nouvelles_classes_ids) {
 
     // $ajoutPromoRef($prof_id, $nouvelles_classes_ids);
 }
+global $updateStatut;
+$updateStatut = function ($id) {
+
+    $stmtSelect = "SELECT statut FROM promotion WHERE id = :id";
+    $paramSelect = [":id" => $id];
+    $currentStatus = executeSelect($stmtSelect, $paramSelect); 
+    
+    
+    if (!$currentStatus) {
+        //throw new Exception("Promotion introuvable.");
+        return;
+    }
+    $newStatus = ($currentStatus['statut'] == 'Actif') ? 'Inactif' : 'Actif';
+    
+
+    $stmtUpdate = "UPDATE promotion SET statut = :newStatus WHERE id = :id";
+    $paramUpdate = [
+        ":newStatus" => $newStatus,
+        ":id" => $id
+    ];
+
+    return executUpdate($stmtUpdate, $paramUpdate);
+};
 
 
 

@@ -12,8 +12,16 @@ try {
 function executInsert($sql, $params) {
     $pdo =connexion();
     $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    return $pdo->lastInsertId();
+    foreach ($params as $key => $value) {
+        // Si c'est une ressource binaire (comme image), utilise PDO::PARAM_LOB
+        if ($key === ':image') {
+            $stmt->bindValue($key, $value, PDO::PARAM_LOB);
+        } else {  
+            $stmt->bindValue($key, $value);
+        }
+    }
+    $stmt->execute();
+ return $pdo->lastInsertId();
 };
 
 function executUpdate($sql, $params = []) {
@@ -23,25 +31,13 @@ function executUpdate($sql, $params = []) {
      return $stmt;
 };
 
-function executSelect($sql, $params = []) {
+function executeSelectAll($sql, $params = []) {
     $pdo =connexion();
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-// temporaire
-// function executSelect($sql, $params = []) {
-//     $pdo = connexion();
-//     echo "<!-- Requête SQL : $sql -->"; // Debug visible en HTML
-//     $stmt = $pdo->prepare($sql);
-//     $stmt->execute($params);
-//     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-//     if (empty($results)) {
-//         echo "<!-- Aucun résultat pour la requête -->";
-//     }
-//     return $results;
-// }
+
 function executeSelect($sql, $params = []) {
     $pdo =connexion();
     $stmt = $pdo->prepare($sql);
@@ -60,14 +56,14 @@ function getId($sql, $params = []) {
 //pour compter la totalite dans une table
 $compter=function ($table): int {
     $sql = "SELECT COUNT(*) as count FROM $table";
-    $result = executSelect($sql);
+    $result = executeSelectAll($sql);
     return $result[0]['count'] ?? 0;
 };
 //pour compter la totalite dans une table
 $compterElementSpecifique=function ($table,$colonne,$value): int {
     $sql = "SELECT COUNT(*) as count FROM $table WHERE $colonne = :valeur";
     $param=['valeur' => $value];
-    $result = executSelect($sql,$param);
+    $result = executeSelectAll($sql,$param);
     return $result[0]['count'] ?? 0;
 };
 
