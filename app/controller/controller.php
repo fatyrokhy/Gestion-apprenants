@@ -31,6 +31,23 @@ function isEmpty($name, &$errors, $isCheckbox = false) {
     }
 }
 
+//Numérique
+function estNumeric($name,&$errors) {
+    if (!empty(trim($_POST[$name]))) {
+        if (!is_numeric($_POST[$name])) {
+            $errors[$name]=ucfirst($name)." doit etre numerique";
+        }
+    }
+}
+//Positif
+function estPositif($name,&$errors){
+    if (!empty(trim($_POST[$name])) && is_numeric($_POST[$name])) {
+        if ($_POST[$name]<=0) {
+        $errors[$name]=ucfirst($name)." doit etre positif";
+    }
+}
+}
+
 //Ne pas retourner a la page de connexion apres connexion
 function NotReturnConnexion($controller,$page){
     if (isset($_SESSION["user"]) &&( $controller== "security" || $controller== "" )){

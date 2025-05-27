@@ -1,35 +1,48 @@
 <?php
-require_once(PATH ."/app/model/promotion.model.php");
-global $compter,$compterElementSpecifique,$vue,$stat,$re;
+require_once(PATH ."/app/model/ref.model.php");
+global $stat;
 
-$vue = $_GET['vue'] ?? 'grille';
 
 $stat = $_GET['statut'] ?? 'Tous';
 
- $ref=select('referentiel');
+if (isset($_POST["addRef"])) {
+    global $errors;
+    $errors=[];
+    isEmpty('libelle',$errors);
+    isEmpty('capacite',$errors);
+    isEmpty('description',$errors);
+    estNumeric('capacite',$errors);
+    estPositif('capacite',$errors);
+    if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+    $imageData = file_get_contents($_FILES['image']['tmp_name']);
+} else {
+    $imageData = null; // ou gérer une erreur personnalisée
+}
+    if (empty($errors)) {
+    $reference= $ajoutRef($_POST["libelle"],$_POST["capacite"],$imageData,$_POST["description"]);}
 
-if (isset($_POST["addPromo"])) {
-    $ref_ids = $_POST['check'] ?? [];
+    redirection('ref','ref');
+}
 
-     $imageData = file_get_contents($_FILES['image']['tmp_name']);
-
-    $promo_id = $ajoutPromo($_POST["nom"], $_POST["dd"], $_POST["df"],$imageData);
-
-    $ajoutPromoRef($promo_id, $ref_ids);
-    redirection('promo','dashboard');
+ $success=null;
+if ( isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $success = $updateStatut($id); // Appel de la fonction du modèle
 }
 
 
-$image = fn($id) =>$getImagePromoById($id);
 
-// 2. Fonction pour récupérer les promos filtrées
-$listPromos = fn() => $findPromoByStatut($stat); 
+//  Fonction pour récupérer les promos filtrées
+$recherche = $_GET['search'] ?? null;
+$refs  = fn() => $searchRefs($recherche);  
 
 $listeRef = fn() => renderView(
     'admin',
     'ref',
     [
-        'refs' => $ref,
+        'refs' => $refs (),
+        'image' => $getImagePromoById,
+        'success' => $success
     ],
     'base.layout'
 );

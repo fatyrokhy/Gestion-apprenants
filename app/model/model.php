@@ -24,6 +24,21 @@ function executInsert($sql, $params) {
  return $pdo->lastInsertId();
 };
 
+function executInserte($sql, $params) {
+    $pdo =connexion();
+    $stmt = $pdo->prepare($sql);
+    foreach ($params as $key => $value) {
+        // Si c'est une ressource binaire (comme image), utilise PDO::PARAM_LOB
+        if ($key === ':image') {
+            $stmt->bindValue($key, $value, PDO::PARAM_LOB);
+        } else {  
+            $stmt->bindValue($key, $value);
+        }
+    }
+    $stmt->execute($params);
+    return $stmt;
+};
+
 function executUpdate($sql, $params = []) {
     $pdo =connexion();
     $stmt= $pdo->prepare($sql);
